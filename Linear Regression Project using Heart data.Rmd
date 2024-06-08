@@ -1,0 +1,692 @@
+---
+title: "STAT 7630 Project Spring 2024"
+author: "Fahim Hoq"
+date: "2024-05-04"
+output: html_document
+---
+
+```{r}
+# Loading Data
+df = read.csv('/home/fahim/Documents/processed_cleveland.csv', header=T)
+```
+
+```{r}
+# About the data
+head(df)
+dim(df)
+names(df)
+```
+
+```{r}
+# CleanData
+library(dplyr)
+df2 = df
+df2 <- df2 %>%
+  mutate(across(everything(), ~gsub("[?]", NA, .x)))
+df2 = na.omit(df2)
+```
+
+```{r}
+#CleanData
+library(dplyr)
+df2 = df
+df2= as.data.frame(gsub("[?]", NA, as.matrix(df)))
+df2 = na.omit(df2)
+```
+
+```{r}
+df2 = mutate_all(df2, function(x) as.numeric(as.character(x)))
+```
+
+# Univariate Plots
+
+## Histograms
+
+```{r}
+# Uni variate Plots
+library(ggplot2)
+ggplot(df, aes(x = age)) +
+  geom_histogram(bins=30, fill = "blue", colour = "black", boundary = 25, alpha = 0.75) +
+  theme_bw() +
+  xlab("Age of Patient in years") +
+  ylab("Number of Patients") +
+  ggtitle("Histogram of Age")
+```
+
+```{r}
+ggplot(df, aes(x = trestbps)) +
+  geom_histogram(bins=30, fill = "blue", colour = "black", boundary = 25, alpha = 0.75) +
+  theme_bw() +
+  ylab("Number of Patients") +
+  xlab(" resting blood pressure (in mm Hg on admission to the hospital)") +
+  ggtitle("Histogram of Resting Blood Pressure")
+```
+```{r}
+ggplot(df, aes(x = chol)) +
+  geom_histogram(bins=30, fill = "blue", colour = "black", boundary = 25, alpha = 0.75) +
+  theme_bw() +
+  ylab("Number of Patients") +
+  xlab("serum cholestoral in mg/dl") +
+  ggtitle("Histogram of Cholesterol")
+```
+
+```{r}
+ggplot(df, aes(x = thalach)) +
+  geom_histogram(bins=30, fill = "blue", colour = "black", boundary = 25, alpha = 0.75) +
+  theme_bw() +
+  ylab("Number of Patients") +
+  xlab("Maximum Heart rate achieved in beats per minute") +
+  ggtitle("Histogram of Heart Rate")
+```
+
+```{r}
+ggplot(df, aes(x = oldpeak)) +
+  geom_histogram(bins=30, fill = "blue", colour = "black", boundary = 25, alpha = 0.75) +
+  theme_bw() +
+  ylab("Number of Patients") +
+  ggtitle("Histogram of depression induced by exercise relative to rest")
+```
+
+## Barplots
+
+```{r}
+ggplot(df, aes(x = factor(sex))) +
+  geom_bar(fill = "blue", alpha = 0.75) +
+  theme_bw() +
+  ylab("Number of Patients") +
+  xlab("(1 = male; 0 = female)") +
+  ggtitle("Barplot of Gender")
+```
+
+```{r}
+ggplot(df, aes(x = factor(cp))) +
+  geom_bar(fill = "blue", alpha = 0.75) +
+  theme_bw() +
+  ylab("Number of Patients") +
+  xlab("chest pain type") +
+  ggtitle("Barplot of ChestPain")
+```
+```{r}
+ggplot(df, aes(x = factor(fbs))) +
+  geom_bar(fill = "blue", alpha = 0.75) +
+  theme_bw() +
+  ylab("Number of Patients") +
+  xlab("> 120 mg/dl (1 = true; 0 = false)") +
+  ggtitle("Barplot of Fasting Blood Sugar")
+```
+
+```{r}
+ggplot(df, aes(x = factor(restecg))) +
+  geom_bar(fill = "blue", alpha = 0.75) +
+  theme_bw() +
+  ylab("Number of Patients") +
+  ggtitle("Barplot of resting electrocardiographic results")
+```
+
+```{r}
+ggplot(df, aes(x = factor(exang))) +
+  geom_bar(fill = "blue", alpha = 0.75) +
+  theme_bw() +
+  ylab("Number of Patients") +
+  xlab("exercise induced angina (1 = yes; 0 = no)") +
+  ggtitle("Barplot of exercise induced angina")
+```
+
+```{r}
+ggplot(df, aes(x = factor(slope))) +
+  geom_bar(fill = "blue", alpha = 0.75) +
+  theme_bw() +
+  ylab("Number of Patients") +
+  xlab("Value 1:upsloping 2:flat 3:downsloping") +
+  ggtitle("Barplot of peak exercise")
+```
+
+```{r}
+ggplot(df, aes(x = factor(ca))) +
+  geom_bar(fill = "blue", alpha = 0.75) +
+  theme_bw() +
+  ylab("Number of Patients") +
+  xlab("(0-3) colored by flourosopy (for calcification of vessels)") +
+  ggtitle("Barplot of no. of major vessels")
+```
+
+```{r}
+ggplot(df, aes(x = factor(thal))) +
+  geom_bar(fill = "blue", alpha = 0.75) +
+  theme_bw() +
+  ylab("Number of Patients") +
+  xlab("(3 = normal; 6 = fixed defect; 7 = reversable defect)") +
+  ggtitle("Barplot of nuclear stress test")
+```
+
+```{r}
+ggplot(df, aes(x = factor(num))) +
+  geom_bar(fill = "blue", alpha = 0.75) +
+  theme_bw() +
+  ylab("Number of Patients") +
+  xlab("diameter narrowing") +
+  ggtitle("Barplot of diagnosis of heart disease")
+```
+
+# Bivariate Plots
+
+## Scatter Plots
+
+```{r}
+ggplot(df, aes(x = age, y = thalach)) +
+  geom_point(fill = "blue", shape = 21, size = 0.9, alpha = 0.8) +
+  theme_bw() +
+  xlab("age of patients in years") +
+  ylab("Heart Rate") +
+  ggtitle("ScatterPlot of Heart rate by age")
+```
+
+```{r}
+ggplot(df, aes(x = trestbps, y = thalach)) +
+  geom_point(fill = "blue", shape = 21, size = 0.9, alpha = 0.8) +
+  theme_bw() +
+  xlab("resting blood pressure (in mm Hg on admission to the hospital)") +
+  ylab("Heart Rate") +
+  ggtitle("ScatterPlot of Heart rate by Resting Blood Pressure")
+```
+
+```{r}
+ggplot(df, aes(x = chol, y = thalach)) +
+  geom_point(fill = "blue", shape = 21, size = 0.9, alpha = 0.8) +
+  theme_bw() +
+  xlab("serum cholestoral in mg/dl") +
+  ylab("Heart Rate") +
+  ggtitle("ScatterPlot of Heart rate by Cholesterol")
+```
+
+```{r}
+ggplot(df, aes(x = oldpeak, y = thalach)) +
+  geom_point(fill = "blue", shape = 21, size = 0.9, alpha = 0.8) +
+  theme_bw() +
+  xlab("depression induced by exercise relative to rest") +
+  ylab("Heart Rate") +
+  ggtitle("ScatterPlot of Heart rate by Depression")
+```
+
+## Boxplots
+
+```{r}
+ggplot(df, aes(x = as.factor(sex), y = thalach)) +
+  geom_boxplot(fill = "blue", colour = "black" ,alpha= 0.75) +
+  theme_bw() +
+  xlab("1 = male; 0 = female") +
+  ylab("Maximum Heart Rate") +
+  ggtitle("Boxplot of HeartRate by Gender")
+
+```
+
+```{r}
+ggplot(df, aes(x = as.factor(cp), y = thalach)) +
+  geom_boxplot(fill = "blue", colour = "black" ,alpha= 0.75) +
+  theme_bw() +
+  xlab("chest pain type") +
+  ylab("Maximum Heart Rate") +
+  ggtitle("Boxplot of HeartRate by ChestPain")
+```
+
+```{r}
+ggplot(df, aes(x = as.factor(fbs), y = thalach)) +
+  geom_boxplot(fill = "blue", colour = "black" ,alpha= 0.75) +
+  theme_bw() +
+  xlab("> 120 mg/dl (1 = true; 0 = false)") +
+  ylab("Maximum Heart Rate") +
+  ggtitle("Barplot of Fasting Blood Sugar")
+```
+
+```{r}
+ggplot(df, aes(x = as.factor(restecg), y = thalach)) +
+  geom_boxplot(fill = "blue", colour = "black" ,alpha= 0.75) +
+  theme_bw() +
+  ylab("Maximum Heart Rate") +
+  ggtitle("Barplot of resting electrocardiographic results")
+```
+
+```{r}
+ggplot(df, aes(x = as.factor(exang), y = thalach)) +
+  geom_boxplot(fill = "blue", colour = "black" ,alpha= 0.75) +
+  theme_bw() +
+  xlab("exercise induced angina (1 = yes; 0 = no)") +
+  ylab("Maximum Heart Rate") +
+  ggtitle("Barplot of exercise induced angina")
+```
+
+```{r}
+ggplot(df, aes(x = as.factor(slope), y = thalach)) +
+  geom_boxplot(fill = "blue", colour = "black" ,alpha= 0.75) +
+  theme_bw() +
+  xlab("Value 1:upsloping 2:flat 3:downsloping") +
+  ylab("Maximum Heart Rate") +
+  ggtitle("Barplot of peak exercise")
+```
+
+```{r}
+ggplot(df, aes(x = as.factor(ca), y = thalach)) +
+  geom_boxplot(fill = "blue", colour = "black" ,alpha= 0.75) +
+  theme_bw() +
+  xlab("(0-3) colored by flourosopy (for calcification of vessels)") +
+  ylab("Maximum Heart Rate") +
+  ggtitle("Barplot of no. of major vessels")
+```
+
+```{r}
+ggplot(df, aes(x = as.factor(thal), y = thalach)) +
+  geom_boxplot(fill = "blue", colour = "black" ,alpha= 0.75) +
+  theme_bw() +
+  xlab("(3 = normal; 6 = fixed defect; 7 = reversable defect)") +
+  ylab("Maximum Heart Rate") +
+  ggtitle("Barplot of nuclear stress test")
+```
+
+
+```{r}
+ggplot(df, aes(x = as.factor(num), y = thalach)) +
+  geom_boxplot(fill = "blue", colour = "black" ,alpha= 0.75) +
+  theme_bw() +
+  xlab("diameter narrowing") +
+  ylab("Maximum Heart Rate") +
+  ggtitle("Barplot of diagnosis of heart disease")
+```
+
+# Trivariate Plots
+
+## ScatterPlots
+
+```{r}
+ggplot(df) +
+  geom_smooth(
+    aes(x = age, y = thalach, color = as.factor(sex)),method = 'lm') +
+  geom_point(aes(x = age, y = thalach, color = as.factor(sex)), shape = 16, size = 1.5, alpha = 0.8) +
+  theme_bw() +
+  xlab("Age of Patients in years") +
+  ylab("Maximum Heart rate achieved") +
+  ggtitle("ScatterPlot of HeartRate by age startified by gender")
+```
+
+```{r}
+ggplot(df) +
+  geom_smooth(
+    aes(x = trestbps, y = thalach, color = as.factor(sex)),method = 'lm') +
+  geom_point(aes(x = trestbps, y = thalach, color = as.factor(sex)), shape = 16, size = 1.5, alpha = 0.8) +
+  theme_bw() +
+  xlab("resting blood pressure (in mm Hg on admission to the hospital)") +
+  ylab("Maximum Heart rate achieved") +
+  ggtitle("ScatterPlot of HeartRate by BloodPressure startified by gender")
+```
+
+```{r}
+ggplot(df) +
+  geom_smooth(
+    aes(x = chol, y = thalach, color = as.factor(sex)),method = 'lm') +
+  geom_point(aes(x = chol, y = thalach, color = as.factor(sex)), shape = 16, size = 1.5, alpha = 0.8) +
+  theme_bw() +
+  xlab("serum cholestoral in mg/dl") +
+  ylab("Maximum Heart rate achieved") +
+  ggtitle("ScatterPlot of HeartRate by Cholesterol startified by gender")
+```
+
+```{r}
+ggplot(df) +
+  geom_smooth(
+    aes(x = oldpeak, y = thalach, color = as.factor(sex)),method = 'lm') +
+  geom_point(aes(x = oldpeak, y = thalach, color = as.factor(sex)), shape = 16, size = 1.5, alpha = 0.8) +
+  theme_bw() +
+  xlab("depression induced by exercise relative to rest") +
+  ylab("Maximum Heart rate achieved") +
+  ggtitle("ScatterPlot of HeartRate by Depression startified by gender")
+```
+
+## Boxplots
+
+```{r}
+ggplot(df, aes(x=as.factor(cp), y=thalach, fill= as.factor(sex))) +
+  geom_boxplot()+ 
+  theme_bw() +
+  theme(legend.position="bottom")+
+  xlab("chest pain type") +
+  ggtitle("Boxplot of HeartRate by ChestPain stratified by Gender")
+```
+
+
+```{r}
+ggplot(df, aes(x=as.factor(fbs), y=thalach, fill= as.factor(sex))) +
+  geom_boxplot()+ 
+  theme_bw() +
+  theme(legend.position="bottom")+
+  xlab("> 120 mg/dl (1 = true; 0 = false)") +
+  ggtitle("Boxplot of HeartRate by BloodSugar stratified by Gender")
+```
+
+```{r}
+ggplot(df, aes(x=as.factor(restecg), y=thalach, fill= as.factor(sex))) +
+  geom_boxplot()+ 
+  theme_bw() +
+  theme(legend.position="bottom")+
+  xlab("resting electrocardiographic results") +
+  ggtitle("Boxplot of HeartRate by electrocardiographic stratified by Gender")
+```
+
+```{r}
+ggplot(df, aes(x=as.factor(exang), y=thalach, fill= as.factor(sex))) +
+  geom_boxplot()+ 
+  theme_bw() +
+  theme(legend.position="bottom")+
+  xlab("exercise induced angina (1 = yes; 0 = no)") +
+  ggtitle("Boxplot of HeartRate by ExerciseInducedAngina stratified by Gender")
+```
+
+```{r}
+ggplot(df, aes(x=as.factor(slope), y=thalach, fill= as.factor(sex))) +
+  geom_boxplot()+ 
+  theme_bw() +
+  theme(legend.position="bottom")+
+  xlab("Value 1:upsloping 2:flat 3:downsloping") +
+  ggtitle("Boxplot of HeartRate by PeakExercise stratified by Gender")
+```
+
+```{r}
+ggplot(df, aes(x=as.factor(ca), y=thalach, fill= as.factor(sex))) +
+  geom_boxplot()+ 
+  theme_bw() +
+  theme(legend.position="bottom")+
+  xlab("(0-3) colored by flourosopy (for calcification of vessels)") +
+  ggtitle("Boxplot of HeartRate by major vessels stratified by Gender")
+```
+
+```{r}
+ggplot(df, aes(x=as.factor(thal), y=thalach, fill= as.factor(sex))) +
+  geom_boxplot()+ 
+  theme_bw() +
+  theme(legend.position="bottom")+
+  xlab("(3 = normal; 6 = fixed defect; 7 = reversable defect)") +
+  ggtitle("Boxplot of NuclearStressTest by major vessels stratified by Gender")
+```
+
+```{r}
+ggplot(df, aes(x=as.factor(num), y=thalach, fill= as.factor(sex))) +
+  geom_boxplot()+ 
+  theme_bw() +
+  theme(legend.position="bottom")+
+  xlab("diameter narrowing") +
+  ggtitle("Boxplot of diagnosis of heart disease stratified by Gender")
+```
+
+# HeatMaps
+
+```{r}
+K = cor(df2)
+heatmap(K)
+```
+
+
+# Tables
+
+```{r}
+library(htmlTable)
+library(table1)
+df3 = df
+
+df3$sex <- 
+  factor(df3$sex, levels=c(0,1),
+         labels=c("Female", "Male"))
+df3$cp <- 
+  factor(df3$cp, levels=c(1,2,3,4),
+         labels=c("typical angina", "atypical angina", "non-anginal pain", "asymptomatic "))
+df3$fbs <- 
+  factor(df3$fbs, levels=c(0,1),
+         labels=c("< 120 mg/dl", "> 120 mg/dl"))
+df3$restecg <- 
+  factor(df3$restecg, levels=c(0,1,2),
+         labels=c("normal", "having ST-T wave abnormality", "probable or definite left ventricular hypertrophy"))
+df3$exang <- 
+  factor(df3$exang, levels=c(0,1),
+         labels=c("No", "Yes"))
+df3$slope <- 
+  factor(df3$slope, levels=c(1,2,3),
+         labels=c("upsloping", "flat", "downsloping"))
+df3$ca <- 
+  factor(df3$ca, levels=c(0,1,2,3),
+         labels=c("Major vessels:0", "Major vessels:1", "Major vessels:2","Major vessels:3"))
+df3$thal <- 
+  factor(df3$thal, levels=c(3,6,7),
+         labels=c("normal", "fixed defect","reversable defect"))
+df3$num <- 
+  factor(df3$num, levels=c(0,1),
+         labels=c("< 50% diameter narrowing", "> 50% diameter narrowing"))
+
+label(df3$thalach)        <- "Maximum Heart Rate achieved"
+label(df3$age)            <- "Age of Patients"
+label(df3$trestbps)       <- "Resting Blood Pressure in mm Hg"
+label(df3$chol)           <- "serum Cholesterol in mg/dl"
+label(df3$oldpeak)        <- "depression induced by exercise"
+
+label(df3$sex)            <- "Gender"
+label(df3$cp)             <- "Chest Pain"
+label(df3$fbs)            <- "Fasting Blood Sugar"
+label(df3$restecg)        <- "resting electrocardiographic results"
+label(df3$exang)          <- "exercise induced angina"
+label(df3$slope)          <- "slope of the peak exercise"
+label(df3$ca)             <- "number of major vessels"
+label(df3$thal)           <- "results of nuclear stress test"
+label(df3$num)            <- "angiographic disease status"
+
+caption  <- "Summary of Descriptive Statistics"
+footnote <- "Table 1"
+
+table1(~ thalach + age + trestbps + chol + oldpeak + sex + cp + fbs + restecg + exang + slope + ca + thal + num, data = df3, overall=c(left="Total"), caption=caption,footnote = footnote, topclass="Rtable1-zebra")
+```
+
+```{r}
+table1(~ sex + cp + fbs + restecg + exang + slope + ca + thal + num, data = df3, overall=c(left="Total"), caption=caption,footnote = footnote, topclass="Rtable1-zebra")
+```
+
+
+
+# Modeling
+
+```{r}
+# 1. Does Blood Pressure effect Heart Rate?
+#HeartRate ~ BloodPressure + age + sex + BloodSugar + ChestPain + exercises
+
+# 2 Does Cholesterol effect Heart Rate?
+#HeartRate ~ Cholesterol + age + sex + ChestPain +BloodSugar + exercises
+```
+
+
+# Auxilary Models/ Candiddate Models (BP)
+
+```{r}
+a1 = lm(thalach~trestbps, data=df)
+summary(a1)
+```
+
+```{r}
+a2 = lm(thalach~ trestbps + age, data=df)
+summary(a2)
+```
+
+
+```{r}
+a3 = lm(thalach~trestbps + age + sex, data=df)
+summary(a3)
+```
+
+```{r}
+a4 = lm(thalach~trestbps + age + sex + fbs, data=df)
+summary(a4)
+```
+
+```{r}
+a5 = lm(thalach~trestbps + age + sex + fbs + cp, data=df)
+summary(a5)
+```
+
+```{r}
+a6 = lm(thalach~trestbps + age + sex + fbs + cp + oldpeak, data=df)
+summary(a6)
+```
+
+```{r}
+a7 = lm(thalach~trestbps + age + sex + fbs + cp + oldpeak + exang, data=df)
+summary(a7)
+```
+
+# Full Model (BP)
+
+```{r}
+# Full Model
+a8 = lm(thalach~trestbps + age + sex + fbs + cp + oldpeak + exang + slope, data=df)
+summary(a8)
+```
+
+```{r}
+par(mfrow = c(2,2))
+plot(a8)
+```
+
+```{r}
+# Multicolinearity
+library(car)
+vif(model)
+#create vector of VIF values
+vif_values <- vif(a8)
+#create horizontal bar chart to display each VIF value
+barplot(vif_values, main = "VIF Model1", horiz = F, col = "steelblue")
+#add vertical line at 5
+abline(h = 5, lwd = 2, lty = 3)
+```
+
+```{r}
+ifelse1 <- function (test, yes, no){
+  if (test) yes
+  else no
+}
+
+lmCI <- function( model, expcoef=FALSE, robust=FALSE ){
+	coef <- summary( model )$coef[,1]
+	se <- ifelse1( robust, robust.se.lm(model)[,2], summary( model )$coef[,2] )
+	tvalue <- coef / se
+	pvalue <- 2*(1-pt(abs(tvalue), model$df.residual))
+	if( expcoef ){
+		ci95.lo <- exp( coef - qt(.975, model$df.residual) * se )
+		ci95.hi <- exp( coef + qt(.975, model$df.residual) * se )
+		est <- exp( coef )
+	}
+	else{
+		ci95.lo <- coef - qt(.975, model$df.residual) * se
+		ci95.hi <- coef + qt(.975, model$df.residual) * se
+		est <- coef
+	}
+	rslt <- round( cbind( est, ci95.lo, ci95.hi, tvalue, pvalue ), 4 )
+	colnames( rslt ) <- ifelse1( 	robust,
+					c("Est", "robust ci95.lo", "robust ci95.hi", "robust t value", "robust Pr(>|t|)"),
+					c("Est", "ci95.lo", "ci95.hi", "t value", "Pr(>|t|)") )
+	colnames( rslt )[1] <- ifelse( expcoef, "exp( Est )", "Est" )
+	rslt
+	}
+```
+
+```{r}
+lmCI(model = a8, expcoef=FALSE, robust=FALSE )
+```
+
+```{r}
+library(knitr)
+kable(lmCI(model = a8, expcoef=F, robust=F ),
+format = "html",
+booktabs = T,
+caption = "Summary of the 1st model")
+```
+
+
+# Auxilary Models/ Candiddate Models (Chol)
+
+```{r}
+c1 = lm(thalach~chol,data=df)
+summary(c1)
+```
+
+```{r}
+c2 = lm(thalach~chol+age,data=df)
+summary(c2)
+```
+
+```{r}
+c3 = lm(thalach~chol+age + sex,data=df)
+summary(c3)
+```
+
+```{r}
+c4 = lm(thalach~chol+age + sex + fbs,data=df)
+summary(c4)
+```
+
+```{r}
+c5 = lm(thalach~chol+age + sex + fbs+cp,data=df)
+summary(c5)
+```
+
+```{r}
+c6 = lm(thalach~chol+age + sex + fbs+cp +oldpeak,data=df)
+summary(c6)
+```
+
+```{r}
+c7 = lm(thalach~chol+age + sex + fbs+cp +oldpeak + exang,data=df)
+summary(c7)
+```
+
+# Full Model(Chol)
+
+```{r}
+#Full Model
+c8 = lm(thalach~chol+age + sex + fbs+cp +oldpeak + exang + slope,data=df)
+summary(c8)
+```
+
+```{r}
+par(mfrow = c(2,2))
+plot(c8)
+```
+
+```{r}
+# Multicolinearity
+library(car)
+vif(model)
+#create vector of VIF values
+vif_values <- vif(c8)
+#create horizontal bar chart to display each VIF value
+barplot(vif_values, main = "VIF Model2", horiz = F, col = "steelblue")
+#add vertical line at 5
+abline(h = 5, lwd = 2, lty = 3)
+```
+
+
+```{r}
+lmCI(model = c8, expcoef=FALSE, robust=FALSE )
+```
+
+```{r}
+library(knitr)
+kable(lmCI(model = c8, expcoef=F, robust=F ),
+format = "html",
+booktabs = T,
+caption = "Summary of the 2nd model")
+```
+
+
+```{r}
+# Citation
+citation()
+citation("dplyr")
+citation("ggplot2")
+citation("car")
+citation("table1")
+citation("htmlTable")
+citation("knitr")
+```
+
